@@ -1,76 +1,75 @@
-# Pond Catchment Analysis Backend
+# AI-based Village Pond Planning System
 
-Backend API for Assignment 1 - Phase 2.
+Full-stack Geospatial & Hydrological Planning System for **CSD Assignment 1 - Phase 3** (VIVA & Demo).
+
+- **Student**: Katari Venu (Roll: 12341110)
+- **Institution**: Department of Computer Science & Engineering, IIT Bhilai
+
+---
+
+## Live Links (IIT Bhilai Campus Network)
+
+| Service | Internal Host Port | Public Campus URL |
+| :--- | :--- | :--- |
+| **Working Front-End** | `6000` | [http://10.1.75.79:6289](http://10.1.75.79:6289) |
+| **Backend REST API** | `3000` | [http://10.1.75.79:3289](http://10.1.75.79:3289) |
+| **Swagger Interactive Docs** | `3000` | [http://10.1.75.79:3289/docs](http://10.1.75.79:3289/docs) |
+| **Public YouTube Demo Video** | - | [https://www.youtube.com/playlist?list=PLONuDrOmfdhY](https://www.youtube.com/playlist?list=PLONuDrOmfdhY) |
+
+---
 
 ## Features
 
-- Accepts KML and KMZ contour maps.
-- Extracts contour elevations from the uploaded input.
-- Converts geographic coordinates to local metric coordinates.
-- Builds an interpolated Digital Elevation Model (DEM).
-- Calculates D8 flow directions.
-- Identifies internal drainage basins.
-- Selects a candidate pond location from the terrain.
-- Estimates contributing catchment area.
-- Returns structured JSON.
-- No sample-map coordinates or results are hard-coded.
+- **Interactive Satellite Map GIS**: High-resolution Esri World Imagery with vector street layer switcher and bounding box drawing.
+- **On-Map Land Area Selection**: Select any custom bounding box or agricultural parcel on the map (`POST /api/analyze-area`).
+- **Contour Map Ingestion**: Upload KML/KMZ elevation contours (`POST /analyzeContour`).
+- **Hydrological D8 Flow Routing**: Computes steepest downhill gradients and topological upstream flow accumulation.
+- **Valley Floor Hazard Exclusion**: Enforces morphological dilation buffers on low-lying river channels to prevent embankment flood breach.
+- **Multi-Criteria Pond Site Optimization**: Ranks candidates based on contributing catchment area, terrain elevation, and local slope.
+- **Historical Climatology Integration**: Queries Open-Meteo Historical Weather Archive with automated fallback to official IMD Climatological Normals for Durg/Bhilai.
+- **Runoff Volume Modeling**: Implements the Rational Method ($Q = C \cdot P \cdot A$) for annual and monsoon harvestable water volume.
+- **Civil Engineering Pond Sizing**: Computes depth, length, width, side slopes ($1.5:1$), and excavation volume conforming to **IS: 4987**.
+- **Dynamic Map Overlays**: Visualizes delineated catchment polygons, river exclusion zones, pond pin with live telemetry popup, and Chart.js monthly runoff profiles.
 
-## API
+---
 
-### Health check
+## Project Structure
 
-`GET /health`
+```text
+pond-catchment-api/
+|-- main.py                    # Complete FastAPI backend application
+|-- requirements.txt           # Python dependencies (fastapi, uvicorn, scipy, numpy)
+|-- render.yaml                # Cloud deployment configuration
+|-- README.md                  # System documentation & live deployment URLs
+|-- contours_1m.kml            # Primary 1m contour dataset (Shivnath River Basin)
+|-- start_services.sh          # Background service daemon startup script
+|-- frontend/
+|   `-- index.html             # Standalone Leaflet.js Web GIS frontend
+`-- report/
+    |-- report.tex             # ACM manuscript LaTeX source code
+    `-- ui-screenshot.png      # Application user interface screenshot
+```
 
-### Analyze contour map
+---
 
-`POST /analyzeContour`
-
-Upload a `.kml` or `.kmz` file using the form field:
-
-`file`
-
-## Run locally
+## Run Locally
 
 ```bash
+# 1. Install dependencies
 pip install -r requirements.txt
-uvicorn main:app --reload
+
+# 2. Start Backend API
+uvicorn main:app --host 0.0.0.0 --port 3000 --reload
+
+# 3. Start Frontend Web Server
+cd frontend
+python -m http.server 6000
 ```
 
-Open Swagger documentation:
+Access the frontend at `http://localhost:6000` and Swagger docs at `http://localhost:3000/docs`.
 
-`http://127.0.0.1:8000/docs`
-
-## Example cURL
-
-```bash
-curl -X POST "http://127.0.0.1:8000/analyzeContour" \
-  -F "file=@sample.kml"
-```
-
-## Deployment on Render
-
-1. Push this project to GitHub.
-2. Create a Render Web Service from the repository.
-3. Render can use `render.yaml`.
-4. The service URL will look like:
-
-`https://your-service-name.onrender.com`
-
-The assignment API route is:
-
-`https://your-service-name.onrender.com/analyzeContour`
-
-## Methodology
-
-1. Parse KML/KMZ.
-2. Extract contour coordinates and elevations.
-3. Project longitude/latitude to local metres.
-4. Interpolate contour points into a DEM.
-5. Calculate D8 downhill flow.
-6. Determine internal drainage basins.
-7. Select a suitable low point associated with the largest internal basin.
-8. Estimate catchment area from contributing raster cells.
+---
 
 ## Important
 
-The result is an engineering/algorithmic estimate intended for the assignment. It should not be treated as a field-survey or construction-grade hydrological analysis.
+The hydrological results represent an algorithmic planning estimate intended for regional watershed conservation and site screening. Geotechnical core-drilling and civil ground surveying should be conducted prior to physical earthmoving.
