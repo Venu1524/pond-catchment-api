@@ -11,6 +11,7 @@
 \usepackage{subcaption}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{graphicx}
 
 \AtBeginDocument{%
   \providecommand\BibTeX{{Bib\TeX}}}
@@ -278,19 +279,10 @@ The frontend interface is implemented as a self-contained Single Page Applicatio
 
 \begin{figure}[h]
   \centering
-  \fbox{\begin{minipage}{0.9\linewidth}
-    \centering
-    \vspace{10pt}
-    \textbf{[ AI-based Village Pond Planning System - Interface ]} \\
-    \vspace{6pt}
-    \textit{Interactive Satellite Map View (Esri) with Overlaid Catchment Basin (Cyan),} \\
-    \textit{Valley Hazard Exclusion Buffer (Amber), Suggested Pond Marker (Blue Pin),} \\
-    \textit{and Floating Hydrological Analytics HUD (Lat: 21.2488, Area: 6.30 ha, Runoff: 22.68 ML)} \\
-    \vspace{10pt}
-  \end{minipage}}
-  \caption{Application user interface displaying satellite imagery, land area boundary, delineated catchment polygon, and results HUD.}
+  \includegraphics[width=0.98\linewidth]{ui-screenshot.png}
+  \caption{Application user interface displaying high-resolution satellite imagery (Esri World Imagery), user-selected agricultural land boundary (blue dashed box), delineated upstream catchment basin polygon (cyan fill), valley floor safety exclusion zone (amber dashed boundary), and interactive recommended pond marker popup (Latitude: $21.259760^\circ\text{ N}$, Longitude: $81.335460^\circ\text{ E}$, Ground Elevation: $278.581\text{ m}$, Storage Capacity: $9,530.4\text{ m}^3$, Dimensions: $68.2\text{ m} \times 55.6\text{ m} \times 3.5\text{ m}$) accessed live via \url{http://10.1.75.79:6289}.}
   \label{fig:ui}
-  \Description{User interface diagram showing the map with satellite imagery, land boundary, delineated catchment area polygon, pond location marker, and floating metrics panel.}
+  \Description{User interface screenshot showing the web application running at http://10.1.75.79:6289 with the satellite map, selected bounding box, delineated catchment basin, valley exclusion zone, and the suggested pond site popup with latitude 21.259760, longitude 81.335460, storage capacity 9530.4 m3, and dimensions 68.2m x 55.6m x 3.5m.}
 \end{figure}
 
 \subsection{Database and Storage}
